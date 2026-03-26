@@ -23,10 +23,10 @@
         .article-content p { margin-bottom: 1.5rem; line-height: 1.6; }
         .faq-item { border-bottom: 1px solid rgba(39, 39, 42, 0.4); }
     </style>
+<base target="_blank">
 </head>
 <body class="bg-[#09090b] text-zinc-300 font-mono antialiased min-h-screen flex flex-col w-full selection:bg-brand-500/30 selection:text-brand-100">
 
-    <!-- NAV (same as listing page) -->
     <nav class="sticky top-0 z-50 bg-[#09090b] border-b border-zinc-800">
         <div class="max-w-full mx-auto px-4 h-12 flex items-center justify-between">
             <div class="flex items-center gap-6">
@@ -51,7 +51,6 @@
     <div class="flex-1 flex w-full max-w-full mx-auto">
         <main class="flex-1 max-w-4xl px-4 py-8">
             
-            <!-- HEADER SECTION -->
             <div class="mb-8">
                 <a href="/" class="inline-flex items-center gap-2 text-[10px] font-bold text-zinc-500 hover:text-brand-400 uppercase tracking-widest transition-colors mb-6">
                     <span>&lt; BACK TO FEED</span>
@@ -73,7 +72,6 @@
                 </div>
             </div>
 
-            <!-- EXECUTIVE TLDR -->
             <div class="bg-zinc-900/40 border border-zinc-800 p-6 mb-10">
                 <div class="text-[10px] font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">EXECUTIVE TLDR //</div>
                 <ul class="space-y-3">
@@ -81,12 +79,10 @@
                 </ul>
             </div>
 
-            <!-- ARTICLE CONTENT -->
             <div class="article-content text-sm md:text-base text-zinc-400 font-mono tracking-tight mb-16">
                 {{CONTENT}}
             </div>
 
-            <!-- FAQ SECTION -->
             <div class="border-t border-zinc-800 pt-12 pb-20">
                 <div class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-6">FREQUENTLY ASKED QUESTIONS //</div>
                 <div class="space-y-6">
@@ -96,16 +92,12 @@
 
         </main>
 
-        <!-- SIDEBAR: RECENT SIGNALS -->
         <aside class="w-80 flex-none border-l border-zinc-800 bg-[#09090b] p-4 overflow-y-auto hidden lg:block">
             <div class="text-[10px] font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">RECENT SIGNALS //</div>
-            <div class="space-y-4" id="recent-signals">
-                <!-- Populated by JavaScript from articles.json -->
-            </div>
+            <div class="space-y-4" id="recent-signals"></div>
         </aside>
     </div>
 
-    <!-- FOOTER -->
     <footer class="border-t border-zinc-800 bg-[#09090b] h-10 shrink-0">
         <div class="max-w-full mx-auto px-4 h-full flex justify-between items-center text-[10px] text-zinc-600 uppercase tracking-wide">
             <div class="flex items-center gap-4">
@@ -121,7 +113,6 @@
     </footer>
 
     <script>
-        // Load recent signals in sidebar
         fetch('/data/articles.json')
             .then(r => r.json())
             .then(articles => {
