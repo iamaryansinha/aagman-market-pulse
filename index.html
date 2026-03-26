@@ -114,6 +114,7 @@
         // Update clock
         function updateClock() {
             const now = new Date();
+            const istTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
             const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
             const str = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
             document.getElementById('clock').textContent = str;
