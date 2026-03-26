@@ -32,6 +32,13 @@
         ::-webkit-scrollbar-thumb { background: #27272a; }
         .terminal-row:hover { background-color: rgba(255, 255, 255, 0.03); }
         .terminal-row { border-bottom: 1px solid rgba(39, 39, 42, 0.4); }
+        /* Line clamp for summary */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 <base target="_blank">
 </head>
@@ -68,21 +75,20 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <div class="min-w-[1000px]">
-                
-                <!-- Header Row -->
-                <div class="flex items-center px-4 py-2 border-b border-zinc-700 bg-zinc-900/50 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                    <div class="w-28 shrink-0">Category</div>
-                    <div class="w-14 shrink-0">Time</div>
-                    <div class="flex-1 px-4">Headline & Summary</div>
-                    <div class="w-16 shrink-0 text-right">Read</div>
-                </div>
+        <!-- Desktop: Table Layout | Mobile: Card Layout -->
+        <div class="w-full">
+            
+            <!-- Desktop Header (hidden on mobile) -->
+            <div class="hidden md:flex items-center px-4 py-2 border-b border-zinc-700 bg-zinc-900/50 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <div class="w-28 shrink-0">Category</div>
+                <div class="w-14 shrink-0">Time</div>
+                <div class="flex-1 px-4">Headline & Summary</div>
+                <div class="w-16 shrink-0 text-right">Read</div>
+            </div>
 
-                <!-- Articles Container - Filled by JavaScript -->
-                <div class="flex flex-col" id="articles-container">
-                    <!-- Articles load here -->
-                </div>
+            <!-- Articles Container -->
+            <div class="flex flex-col" id="articles-container">
+                <!-- Articles load here -->
             </div>
         </div>
 
@@ -114,7 +120,6 @@
         // Update clock
         function updateClock() {
             const now = new Date();
-            const istTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
             const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
             const str = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
             document.getElementById('clock').textContent = str;
@@ -127,7 +132,7 @@
             location.reload();
         }, 4 * 60 * 60 * 1000);
 
-        // Category colors mapping - YOUR 5 CATEGORIES (UPPERCASE)
+        // Category colors mapping
         const categoryColors = {
             'COMPANIES': 'text-blue-400',
             'MARKETS': 'text-emerald-400',
@@ -152,15 +157,39 @@
                 
                 container.innerHTML = articles.map(article => {
                     const colorClass = categoryColors[article.category] || 'text-zinc-400';
+                    const timeDisplay = article.time && article.time !== 'undefined' ? article.time : '--:--';
+                    
+                    // Desktop: Table row | Mobile: Card
                     return `
-                        <a href="articles/${article.slug}.html" class="terminal-row flex items-center px-4 py-2.5 transition-colors group">
-                            <div class="w-28 shrink-0 text-[10px] font-mono font-bold ${colorClass}">${article.category}</div>
-                            <div class="w-14 shrink-0 text-[11px] font-mono text-zinc-500">${article.time}</div>
-                            <div class="flex-1 px-4 flex items-baseline gap-3 overflow-hidden">
-                                <span class="text-[13px] font-bold text-zinc-100 group-hover:text-brand-400 whitespace-nowrap">${article.title}</span>
-                                <span class="text-[12px] text-zinc-500 truncate uppercase tracking-wide">${article.summary}</span>
+                        <a href="articles/${article.slug}.html" class="terminal-row block md:flex md:items-center px-4 py-3 md:py-2.5 transition-colors group border-b border-zinc-800/50">
+                            
+                            <!-- Mobile: Top row with category, time, read time -->
+                            <div class="flex items-center justify-between mb-2 md:hidden">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold ${colorClass}">${article.category}</span>
+                                    <span class="text-[10px] text-zinc-500">${timeDisplay}</span>
+                                </div>
+                                <span class="text-[10px] text-zinc-500">${article.read_time}m</span>
                             </div>
-                            <div class="w-16 shrink-0 text-right text-[11px] font-mono text-zinc-500">${article.read_time}m</div>
+                            
+                            <!-- Desktop: Category column -->
+                            <div class="hidden md:block w-28 shrink-0 text-[10px] font-mono font-bold ${colorClass}">${article.category}</div>
+                            
+                            <!-- Desktop: Time column -->
+                            <div class="hidden md:block w-14 shrink-0 text-[11px] font-mono text-zinc-500">${timeDisplay}</div>
+                            
+                            <!-- Title & Summary (both mobile & desktop) -->
+                            <div class="flex-1 md:px-4">
+                                <div class="text-[14px] md:text-[13px] font-bold text-zinc-100 group-hover:text-brand-400 mb-1 md:mb-0 leading-tight">
+                                    ${article.title}
+                                </div>
+                                <div class="text-[11px] md:text-[12px] text-zinc-500 line-clamp-2 md:truncate uppercase tracking-wide">
+                                    ${article.summary}
+                                </div>
+                            </div>
+                            
+                            <!-- Desktop: Read time column -->
+                            <div class="hidden md:block w-16 shrink-0 text-right text-[11px] font-mono text-zinc-500">${article.read_time}m</div>
                         </a>
                     `;
                 }).join('');
