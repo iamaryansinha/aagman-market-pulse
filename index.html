@@ -45,12 +45,12 @@
                     <span class="text-sm font-bold tracking-wide text-zinc-100 uppercase">AAGMAN <span class="text-brand-400">PULSE TERMINAL</span></span>
                 </div>
                 <div class="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-wide text-zinc-500">
-                    <a href="#" class="nav-link active" data-category="all">Latest</a>
-                    <a href="#" class="nav-link hover:text-zinc-100 transition-colors" data-category="COMPANIES">Companies</a>
-                    <a href="#" class="nav-link hover:text-zinc-100 transition-colors" data-category="MARKETS">Markets</a>
-                    <a href="#" class="nav-link hover:text-zinc-100 transition-colors" data-category="ECONOMY">Economy</a>
-                    <a href="#" class="nav-link hover:text-zinc-100 transition-colors" data-category="STOCKS">Stocks</a>
-                    <a href="#" class="nav-link hover:text-zinc-100 transition-colors" data-category="COMMODS">Commods</a>
+                    <a href="/" class="nav-link active" data-category="all">Latest</a>
+                    <a href="/?category=COMPANIES" class="nav-link hover:text-zinc-100 transition-colors" data-category="COMPANIES">Companies</a>
+                    <a href="/?category=MARKETS" class="nav-link hover:text-zinc-100 transition-colors" data-category="MARKETS">Markets</a>
+                    <a href="/?category=ECONOMY" class="nav-link hover:text-zinc-100 transition-colors" data-category="ECONOMY">Economy</a>
+                    <a href="/?category=STOCKS" class="nav-link hover:text-zinc-100 transition-colors" data-category="STOCKS">Stocks</a>
+                    <a href="/?category=COMMODS" class="nav-link hover:text-zinc-100 transition-colors" data-category="COMMODS">Commods</a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -139,6 +139,27 @@
         let allArticles = [];
         let currentFilter = 'all';
 
+        // Check URL for category parameter on page load
+        function getCategoryFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('category');
+        }
+
+        // Apply category filter from URL
+        function applyURLFilter() {
+            const category = getCategoryFromURL();
+            if (category && ['COMPANIES', 'MARKETS', 'ECONOMY', 'STOCKS', 'COMMODS'].includes(category)) {
+                currentFilter = category;
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    l.classList.remove('active', 'text-brand-400');
+                    if (l.dataset.category === category) {
+                        l.classList.add('active', 'text-brand-400');
+                    }
+                });
+            }
+        }
+
         // Fetch and display articles
         async function loadArticles() {
             try {
@@ -152,6 +173,7 @@
                     return;
                 }
                 
+                applyURLFilter(); // Apply category from URL if present
                 renderArticles();
                 statusText.textContent = `${allArticles.length} updates loaded`;
                 
@@ -207,18 +229,22 @@
             }).join('');
         }
 
-        // Category filter click handlers
+        // Category filter click handlers (for same-page filtering without reload)
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
+                const category = e.target.dataset.category;
                 
-                // Update active state
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active', 'text-brand-400'));
-                e.target.classList.add('active', 'text-brand-400');
-                
-                // Update filter and re-render
-                currentFilter = e.target.dataset.category;
-                renderArticles();
+                // If clicking "Latest" on index page, just filter without reload
+                if (category === 'all' && window.location.pathname === '/') {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active', 'text-brand-400'));
+                    e.target.classList.add('active', 'text-brand-400');
+                    currentFilter = 'all';
+                    renderArticles();
+                    // Update URL without reload
+                    window.history.pushState({}, '', '/');
+                }
+                // For category links, let the navigation happen (page will reload with filter applied)
             });
         });
 
