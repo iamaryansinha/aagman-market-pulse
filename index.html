@@ -61,11 +61,12 @@
 
     <main class="flex-1 w-full max-w-full mx-auto">
         
+        <!-- Fixed: Single line layout for mobile -->
         <div class="px-4 py-4 bg-zinc-900/30 border-b border-zinc-800">
-            <div class="flex items-center gap-3 text-xs">
-                <span class="text-brand-400 font-bold">> AAGMAN_PULSE</span>
-                <span class="text-zinc-600">|</span>
-                <span class="text-zinc-400 uppercase text-[10px] md:text-xs whitespace-normal leading-relaxed">THE PULSE OF INDIAN MARKETS & BUSINESS. UNFILTERED ANALYSIS. ZERO NOISE.</span>
+            <div class="flex items-start gap-3 text-xs">
+                <span class="text-brand-400 font-bold shrink-0">> AAGMAN_PULSE</span>
+                <span class="text-zinc-600 shrink-0">|</span>
+                <span class="text-zinc-400 uppercase text-[10px] md:text-xs leading-relaxed">THE PULSE OF INDIAN MARKETS & BUSINESS. UNFILTERED ANALYSIS. ZERO NOISE.</span>
             </div>
         </div>
 
@@ -138,22 +139,6 @@
         let allArticles = [];
         let currentFilter = 'all';
 
-        // Convert time to IST
-        function toIST(timeStr) {
-            if (!timeStr || timeStr === 'undefined') return '--:--';
-            const [hours, minutes] = timeStr.split(':').map(Number);
-            let istHours = hours + 5;
-            let istMinutes = minutes + 30;
-            if (istMinutes >= 60) {
-                istMinutes -= 60;
-                istHours += 1;
-            }
-            if (istHours >= 24) {
-                istHours -= 24;
-            }
-            return `${String(istHours).padStart(2, '0')}:${String(istMinutes).padStart(2, '0')}`;
-        }
-
         // Fetch and display articles
         async function loadArticles() {
             try {
@@ -190,7 +175,8 @@
             
             container.innerHTML = articles.map(article => {
                 const colorClass = categoryColors[article.category] || 'text-zinc-400';
-                const timeDisplay = toIST(article.time);
+                // Display time as-is from JSON (Kimi Claw should save IST time)
+                const timeDisplay = article.time && article.time !== 'undefined' ? article.time : '--:--';
                 
                 return `
                     <a href="articles/${article.slug}.html" class="terminal-row block md:flex md:items-center px-4 py-3 md:py-2.5 transition-colors group border-b border-zinc-800/50">
