@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['JetBrains Mono', 'monospace'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
@@ -35,25 +35,25 @@
     </style>
 <base target="_blank">
 </head>
-<body class="bg-[#09090b] text-zinc-300 font-sans antialiased min-h-screen flex flex-col w-full selection:bg-brand-500/30 selection:text-brand-100">
+<body class="bg-[#09090b] text-zinc-300 font-mono antialiased min-h-screen flex flex-col w-full selection:bg-brand-500/30 selection:text-brand-100">
 
     <nav class="sticky top-0 z-50 bg-[#09090b] border-b border-zinc-800">
         <div class="max-w-full mx-auto px-4 h-12 flex items-center justify-between">
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-2">
-                    <span class="text-sm font-bold tracking-tighter text-zinc-100 uppercase">Aagman <span class="text-brand-400">Pulse Terminal</span></span>
+                    <span class="text-sm font-bold tracking-wide text-zinc-100 uppercase">AAGMAN <span class="text-brand-400">PULSE TERMINAL</span></span>
                 </div>
-                <div class="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
+                <div class="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-wide text-zinc-500">
                     <a href="#" class="text-brand-400">Latest</a>
                     <a href="#" class="hover:text-zinc-100 transition-colors">Companies</a>
                     <a href="#" class="hover:text-zinc-100 transition-colors">Markets</a>
                     <a href="#" class="hover:text-zinc-100 transition-colors">Economy</a>
-                    <a href="#" class="hover:text-zinc-100 transition-colors">Stock Markets</a>
-                    <a href="#" class="hover:text-zinc-100 transition-colors">Commodities</a>
+                    <a href="#" class="hover:text-zinc-100 transition-colors">Stocks</a>
+                    <a href="#" class="hover:text-zinc-100 transition-colors">Commods</a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <div class="text-[11px] font-mono text-zinc-500 hidden sm:block" id="clock">MAR 26 14:42:05 GMT</div>
+                <div class="text-[11px] text-zinc-500 hidden sm:block" id="clock">MAR 26 14:42:05 GMT</div>
             </div>
         </div>
     </nav>
@@ -61,10 +61,10 @@
     <main class="flex-1 w-full max-w-full mx-auto">
         
         <div class="px-4 py-4 bg-zinc-900/30 border-b border-zinc-800">
-            <div class="flex items-center gap-3 text-xs font-mono">
+            <div class="flex items-center gap-3 text-xs">
                 <span class="text-brand-400 font-bold">> AAGMAN_PULSE</span>
                 <span class="text-zinc-600">|</span>
-                <span class="text-zinc-400 truncate">The pulse of Indian markets & business. Unfiltered analysis. Zero noise.</span>
+                <span class="text-zinc-400 truncate uppercase">THE PULSE OF INDIAN MARKETS & BUSINESS. UNFILTERED ANALYSIS. ZERO NOISE.</span>
             </div>
         </div>
 
@@ -79,7 +79,7 @@
                     <div class="w-16 shrink-0 text-right">Read</div>
                 </div>
 
-                <!-- Articles Container - Will be filled by JavaScript -->
+                <!-- Articles Container - Filled by JavaScript -->
                 <div class="flex flex-col" id="articles-container">
                     <!-- Articles load here -->
                 </div>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="px-4 py-4 text-center border-t border-zinc-800">
-            <div class="flex items-center justify-center gap-2 text-[11px] font-mono text-zinc-500">
+            <div class="flex items-center justify-center gap-2 text-[11px] text-zinc-500">
                 <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
                 <span id="status-text">Loading updates...</span>
             </div>
@@ -96,7 +96,7 @@
     </main>
 
     <footer class="border-t border-zinc-800 bg-[#09090b] h-10 shrink-0">
-        <div class="max-w-full mx-auto px-4 h-full flex justify-between items-center text-[10px] font-mono text-zinc-600 uppercase">
+        <div class="max-w-full mx-auto px-4 h-full flex justify-between items-center text-[10px] text-zinc-600 uppercase tracking-wide">
             <div class="flex items-center gap-4">
                 <span>Status: Connected</span>
                 <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span> Feed: Realtime</span>
@@ -126,13 +126,13 @@
             location.reload();
         }, 4 * 60 * 60 * 1000);
 
-        // Category colors mapping - YOUR 5 CATEGORIES
+        // Category colors mapping - YOUR 5 CATEGORIES (UPPERCASE)
         const categoryColors = {
-            'Companies': 'text-blue-400',
-            'Markets': 'text-emerald-400',
-            'Economy': 'text-purple-400',
-            'Stock Markets': 'text-brand-400',
-            'Commodities': 'text-orange-400'
+            'COMPANIES': 'text-blue-400',
+            'MARKETS': 'text-emerald-400',
+            'ECONOMY': 'text-purple-400',
+            'STOCKS': 'text-teal-400',
+            'COMMODS': 'text-orange-400'
         };
 
         // Fetch and display articles
@@ -157,7 +157,7 @@
                             <div class="w-14 shrink-0 text-[11px] font-mono text-zinc-500">${article.time}</div>
                             <div class="flex-1 px-4 flex items-baseline gap-3 overflow-hidden">
                                 <span class="text-[13px] font-bold text-zinc-100 group-hover:text-brand-400 whitespace-nowrap">${article.title}</span>
-                                <span class="text-[12px] text-zinc-500 truncate">${article.summary}</span>
+                                <span class="text-[12px] text-zinc-500 truncate uppercase tracking-wide">${article.summary}</span>
                             </div>
                             <div class="w-16 shrink-0 text-right text-[11px] font-mono text-zinc-500">${article.read_time}m</div>
                         </a>
