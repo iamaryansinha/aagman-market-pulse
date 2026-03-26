@@ -33,14 +33,7 @@
                 <div class="flex items-center gap-2">
                     <a href="/" class="text-sm font-bold tracking-wide text-zinc-100 uppercase">AAGMAN <span class="text-brand-400">PULSE TERMINAL</span></a>
                 </div>
-                <div class="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-wide text-zinc-500">
-                    <a href="/" class="hover:text-zinc-100 transition-colors">Latest</a>
-                    <a href="/?category=COMPANIES" class="hover:text-zinc-100 transition-colors">Companies</a>
-                    <a href="/?category=MARKETS" class="hover:text-zinc-100 transition-colors">Markets</a>
-                    <a href="/?category=ECONOMY" class="hover:text-zinc-100 transition-colors">Economy</a>
-                    <a href="/?category=STOCKS" class="hover:text-zinc-100 transition-colors">Stocks</a>
-                    <a href="/?category=COMMODS" class="hover:text-zinc-100 transition-colors">Commods</a>
-                </div>
+                <!-- Only show categories on index page, not on article pages -->
             </div>
             <div class="flex items-center gap-4">
                 <div class="text-[11px] text-zinc-500 hidden sm:block uppercase">{{CURRENT_DATE}}</div>
@@ -90,8 +83,15 @@
                 </div>
             </div>
 
+            <!-- Mobile: Recent Articles at Bottom -->
+            <div class="lg:hidden border-t border-zinc-800 pt-8 pb-12">
+                <div class="text-[10px] font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">RECENT SIGNALS //</div>
+                <div class="space-y-4" id="recent-signals-mobile"></div>
+            </div>
+
         </main>
 
+        <!-- Desktop: Full sidebar with all articles -->
         <aside class="w-80 flex-none border-l border-zinc-800 bg-[#09090b] p-4 overflow-y-auto hidden lg:block">
             <div class="text-[10px] font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">RECENT SIGNALS //</div>
             <div class="space-y-4" id="recent-signals"></div>
@@ -113,27 +113,42 @@
     </footer>
 
     <script>
+        const currentSlug = '{{SLUG}}';
+        
         fetch('/data/articles.json')
             .then(r => r.json())
             .then(articles => {
-                const sidebar = document.getElementById('recent-signals');
-                const recent = articles.slice(0, 5);
                 const colors = {
                     'COMPANIES': 'blue', 'MARKETS': 'emerald', 'ECONOMY': 'purple',
                     'STOCKS': 'teal', 'COMMODS': 'orange'
                 };
-                sidebar.innerHTML = recent.map(a => {
-                    const color = colors[a.category] || 'zinc';
-                    return `
-                        <a href="/articles/${a.slug}.html" class="block border-b border-zinc-800/50 pb-4">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="px-1.5 py-0.5 bg-${color}-500/10 border border-${color}-500/20 text-${color}-400 text-[9px] font-bold uppercase">${a.category}</span>
-                                <span class="text-[10px] text-zinc-600 uppercase">${a.date.split(',')[0].toUpperCase()}</span>
-                            </div>
-                            <div class="text-xs text-zinc-300 leading-snug uppercase tracking-wide hover:text-brand-400 transition-colors">${a.title}</div>
-                        </a>
-                    `;
-                }).join('');
+                
+                // Filter out current article and render all others
+                const otherArticles = articles.filter(a => a.slug !== currentSlug);
+                
+                const renderArticleList = (containerId, articleList) => {
+                    const container = document.getElementById(containerId);
+                    if (!container) return;
+                    
+                    container.innerHTML = articleList.map(a => {
+                        const color = colors[a.category] || 'zinc';
+                        return `
+                            <a href="/articles/${a.slug}.html" class="block border-b border-zinc-800/50 pb-4">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="px-1.5 py-0.5 bg-${color}-500/10 border border-${color}-500/20 text-${color}-400 text-[9px] font-bold uppercase">${a.category}</span>
+                                    <span class="text-[10px] text-zinc-600 uppercase">${a.date.split(',')[0].toUpperCase()}</span>
+                                </div>
+                                <div class="text-xs text-zinc-300 leading-snug uppercase tracking-wide hover:text-brand-400 transition-colors">${a.title}</div>
+                            </a>
+                        `;
+                    }).join('');
+                };
+                
+                // Desktop: fill entire sidebar
+                renderArticleList('recent-signals', otherArticles);
+                
+                // Mobile: show at bottom (limit to 10 for mobile)
+                renderArticleList('recent-signals-mobile', otherArticles.slice(0, 10));
             });
     </script>
 
